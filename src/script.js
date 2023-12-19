@@ -6,6 +6,7 @@ const theme = document.querySelector(':root').style;
 
 console.log(data);
 
+
 if (data) {
 	load();
 } else {
@@ -62,7 +63,7 @@ function load() {
 	console.log("-- 9 --");
 	console.log(dataobj);
 	dataobj = JSON.parse(dataobj);
-	
+
 	linkstr = ""; // linklist html
 	navbstr = ""; // navbar html
 	for (i = 0; i < dataobj.d.length; i++) {
@@ -75,10 +76,10 @@ function load() {
 				linkstr += `<hr/>` // add horizontal rule
 			}
 			for (i3 = 0; i3 < dataobj.d[i].data[i2].length; i3++) {
-				linkstr += `<a href="${dataobj.d[i].data[i2][i3].u}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</a>`
+				linkstr += `<a class="dragdisable" href="${dataobj.d[i].data[i2][i3].u}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</a>`
 			}
 		}
-		
+
 		linkstr += `</div>`
 	}
 	document.getElementById("linklist").innerHTML = linkstr;
@@ -111,6 +112,7 @@ function load_editor() {
 
 	linkstr = ""; // linklist html
 	navbstr = ""; // navbar html
+	linkcount = 0;
 	for (i = 0; i < dataobj.d.length; i++) {
 		navbstr += `<button data-pass="${dataobj.d[i].password}" id="tab_button${i}" onclick="switch_tab('tab${i}')">${dataobj.d[i].title}</button>`
 
@@ -118,10 +120,13 @@ function load_editor() {
 		for (i2 = 0; i2 < dataobj.d[i].data.length; i2++) {
 			linkstr += `<div>`
 			if (i2 != 0) {
-				linkstr += `<hr/>` // add horizontal rule
+				linkstr += `<hr class="dragdisable" />` // add horizontal rule
 			}
 			for (i3 = 0; i3 < dataobj.d[i].data[i2].length; i3++) {
-				linkstr += `<a href="${dataobj.d[i].data[i2][i3].u}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</a>`
+				linkstr += `<span class="edit_link" id="link${linkcount}" data-href="${dataobj.d[i].data[i2][i3].u}" data-name="${dataobj.d[i].data[i2][i3].n}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</span>`
+				console.log(`Adding ${dataobj.d[i].data[i2][i3].n}`)
+				//linkstr += `<a id="link${linkcount}" href="${dataobj.d[i].data[i2][i3].u}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</a>`
+				linkcount++;
 			}
 			linkstr += `</div>`
 		}
@@ -131,6 +136,12 @@ function load_editor() {
 	navbstr += `<button onclick="create_tab()">+</button>`
 	document.getElementById("linklist").innerHTML = linkstr;
 	document.getElementById("navbar").innerHTML = navbstr;
+
+	el = document.getElementById('tab0').firstChild;
+	new Sortable(el, {
+		filter: '.dragdisable',
+		animation: 150
+	});
 
 	document.getElementById("color_bg").value = dataobj.s[0];
 	document.getElementById("color_text").value = dataobj.s[1];
@@ -148,9 +159,9 @@ function save() {
 	let newobj = {
 		d: [
 		],
-		s: ["#000000","#dddddd","#222222","#333333"]
+		s: ["#000000", "#dddddd", "#222222", "#333333"]
 	}
-	
+
 	for (i = 0; i < tab_count; i++) { // for every tab
 		console.log(`Creating tab ${i}`);
 		tabobj = {
@@ -167,11 +178,11 @@ function save() {
 				console.log(`Creating item ${i}`);
 				let elink = document.getElementById(`tab${i}`).childNodes[i2].childNodes[i3];
 				sectionobj.push({
-					u: elink.getAttribute('href'),
-					n: elink.innerHTML,
+					u: elink.getAttribute('data-href'),
+					n: elink.getAttribute('data-name'),
 					c: elink.style.color
 				});
-				
+
 			}
 			tabobj.data.push(sectionobj);
 		}
@@ -199,12 +210,12 @@ function save() {
 
 function add_site() {
 	let slore = document.getElementById('tab0').firstChild;
-	
+
 	surl = document.getElementById("input_url").value;
 	sname = document.getElementById("input_name").value;
 	scolor = document.getElementById("input_color").value;
 
-	slore.innerHTML += `<a href="${surl}" style="color: ${scolor}; border-color: ${scolor};">${sname}</a>`
+	slore.innerHTML += `<span class="edit_link" data-href="${surl}" data-name="${sname}" style="color: ${scolor}; border-color: ${scolor};">${sname}</span>`
 
 
 	document.getElementById("input_color").value = "#00ff88";

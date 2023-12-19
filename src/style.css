@@ -22,7 +22,7 @@ h1 {
 	display: none;
 }
 
-a {
+a, .edit_link {
 	border: dotted 2px;
 	padding: 4px;
 	margin-left: 4px;
