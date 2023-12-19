@@ -137,11 +137,7 @@ function load_editor() {
 	document.getElementById("linklist").innerHTML = linkstr;
 	document.getElementById("navbar").innerHTML = navbstr;
 
-	el = document.getElementById('tab0').firstChild;
-	new Sortable(el, {
-		filter: '.dragdisable',
-		animation: 150
-	});
+	generate_sortables();
 
 	document.getElementById("color_bg").value = dataobj.s[0];
 	document.getElementById("color_text").value = dataobj.s[1];
@@ -171,17 +167,19 @@ function save() {
 		}
 		let section_count = document.getElementById(`tab${i}`).childElementCount;
 		for (i2 = 0; i2 < section_count; i2++) { // for every section
-			console.log(`Creating section ${i}`);
+			console.log(`Creating section ${i2}`);
 			sectionobj = [];
 			let item_count = document.getElementById(`tab${i}`).childNodes[i2].childNodes.length;
 			for (i3 = 0; i3 < item_count; i3++) { //for every item
-				console.log(`Creating item ${i}`);
+				console.log(`Creating item ${i3}`);
 				let elink = document.getElementById(`tab${i}`).childNodes[i2].childNodes[i3];
-				sectionobj.push({
-					u: elink.getAttribute('data-href'),
-					n: elink.getAttribute('data-name'),
-					c: elink.style.color
-				});
+				if (elink.className != "dragdisable") {
+					sectionobj.push({
+						u: elink.getAttribute('data-href'),
+						n: elink.getAttribute('data-name'),
+						c: elink.style.color
+					});
+				}
 
 			}
 			tabobj.data.push(sectionobj);
@@ -206,6 +204,20 @@ function save() {
 	console.log(data);
 	localStorage.setItem("data", data);
 	load();
+}
+
+function generate_sortables() {
+	for (i = 0; i < dataobj.d.length; i++) { // for every tab
+		for (i2 = 0; i2 < dataobj.d[i].data.length; i2++) { // for every section
+			el = document.getElementById(`tab${i}`).childNodes[i2];
+			new Sortable(el, {
+				filter: '.dragdisable',
+				group: "sortgroup",
+				animation: 150
+			});
+		}
+	}
+	
 }
 
 function add_site() {
