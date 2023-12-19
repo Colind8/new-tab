@@ -41,7 +41,7 @@ function toggle_edit() {
 			editables[i].style.display = "none";
 		}
 		edit = false;
-		save();
+		save(0);
 	} else {
 		for (i = 0; i < editables.length; i++) {
 			editables[i].style.display = "block";
@@ -118,15 +118,21 @@ function load_editor() {
 
 		linkstr += `<div id="tab${i}">`
 		for (i2 = 0; i2 < dataobj.d[i].data.length; i2++) {
-			linkstr += `<div>`
+			linkstr += `<div>` // 
 			if (i2 != 0) {
 				linkstr += `<hr class="dragdisable" />` // add horizontal rule
 			}
+			linkstr += `<div>`
 			for (i3 = 0; i3 < dataobj.d[i].data[i2].length; i3++) {
 				linkstr += `<span class="edit_link" id="link${linkcount}" data-href="${dataobj.d[i].data[i2][i3].u}" data-name="${dataobj.d[i].data[i2][i3].n}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</span>`
 				console.log(`Adding ${dataobj.d[i].data[i2][i3].n}`)
 				//linkstr += `<a id="link${linkcount}" href="${dataobj.d[i].data[i2][i3].u}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</a>`
 				linkcount++;
+			}
+
+			linkstr += `</div>`
+			if (i2 != 0) {
+				linkstr += `<button onclick="delete_section(${i2})" style="display: block;" class="dragdisable">Delete Section</button>`
 			}
 			linkstr += `</div>`
 		}
@@ -150,7 +156,7 @@ function load_editor() {
 	theme.setProperty('--c_hover', dataobj.s[3]);
 }
 
-function save() {
+function save(loadnum) {
 	let tab_count = document.getElementById('linklist').childElementCount;
 	let newobj = {
 		d: [
@@ -159,7 +165,7 @@ function save() {
 	}
 
 	for (i = 0; i < tab_count; i++) { // for every tab
-		console.log(`Creating tab ${i}`);
+		console.log(`Saving tab ${i}`);
 		tabobj = {
 			title: document.getElementById(`tab_button${i}`).innerHTML,
 			password: document.getElementById(`tab_button${i}`).getAttribute("data-pass"),
@@ -167,20 +173,25 @@ function save() {
 		}
 		let section_count = document.getElementById(`tab${i}`).childElementCount;
 		for (i2 = 0; i2 < section_count; i2++) { // for every section
-			console.log(`Creating section ${i2}`);
+			console.log(`Saving -- section ${i2}`);
 			sectionobj = [];
-			let item_count = document.getElementById(`tab${i}`).childNodes[i2].childNodes.length;
+			if (i2 == 0) {
+				nodenum = 0;
+			} else {
+				nodenum = 1;
+			}
+			let item_count = document.getElementById(`tab${i}`).childNodes[i2].childNodes[nodenum].childNodes.length;
 			for (i3 = 0; i3 < item_count; i3++) { //for every item
-				console.log(`Creating item ${i3}`);
-				let elink = document.getElementById(`tab${i}`).childNodes[i2].childNodes[i3];
-				if (elink.className != "dragdisable") {
+				console.log(`Saving -- -- item ${i3}`);
+				let elink = document.getElementById(`tab${i}`).childNodes[i2].childNodes[nodenum].childNodes[i3];
+				console.log(elink.className);
+				if ((elink.className != "dragdisable") && (elink.className)) {
 					sectionobj.push({
 						u: elink.getAttribute('data-href'),
 						n: elink.getAttribute('data-name'),
 						c: elink.style.color
 					});
 				}
-
 			}
 			tabobj.data.push(sectionobj);
 		}
@@ -203,13 +214,24 @@ function save() {
 	console.log("-- 5 --");
 	console.log(data);
 	localStorage.setItem("data", data);
-	load();
+	if (loadnum == 0) {
+		load();
+	} else {
+		load_editor();
+	}
+	
 }
 
 function generate_sortables() {
+	console.log("generating sortables");
 	for (i = 0; i < dataobj.d.length; i++) { // for every tab
 		for (i2 = 0; i2 < dataobj.d[i].data.length; i2++) { // for every section
-			el = document.getElementById(`tab${i}`).childNodes[i2];
+			if (i2 == 0) {
+				el = document.getElementById(`tab${i}`).childNodes[i2].childNodes[0];
+			} else {
+				el = document.getElementById(`tab${i}`).childNodes[i2].childNodes[1];
+			}
+			
 			new Sortable(el, {
 				filter: '.dragdisable',
 				group: "sortgroup",
@@ -217,11 +239,11 @@ function generate_sortables() {
 			});
 		}
 	}
-	
+
 }
 
 function add_site() {
-	let slore = document.getElementById('tab0').firstChild;
+	let slore = document.getElementById(`tab${current_tab}`).firstChild.firstChild;
 
 	surl = document.getElementById("input_url").value;
 	sname = document.getElementById("input_name").value;
@@ -233,4 +255,26 @@ function add_site() {
 	document.getElementById("input_color").value = "#00ff88";
 	document.getElementById("input_name").value = "";
 	document.getElementById("input_url").value = "";
+}
+
+function add_section() {
+	console.log("Adding Section");
+	linkstr = ""
+	linkstr += `<div>` // 
+	if (i2 != 0) {
+		linkstr += `<hr class="dragdisable" />` // add horizontal rule
+	}
+	linkstr += `<div>`
+
+	linkstr += `</div>`
+	linkstr += `</div>`
+
+	document.getElementById(`tab${current_tab}`).innerHTML += linkstr;
+	save(1);
+}
+
+function delete_section(num) {
+	console.log("Deleting section");
+	document.getElementById(`tab${current_tab}`).childNodes[num].remove();
+	save(1);
 }
