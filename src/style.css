@@ -1,0 +1,55 @@
+:root {
+	--c_bg: #000000;
+	--c_text: #dddddd;
+	--c_button: #222222;
+	--c_hover: #333333;
+}
+
+body {
+	background-color: var(--c_bg);
+	color: var(--c_text);
+	font-family: sans-serif;
+	padding-left: 10vw;
+	padding-right: 10vw;
+	text-align: left;
+}
+
+h1 {
+	font-size: 4em;
+}
+
+.edit {
+	display: none;
+}
+
+a {
+	border: dotted 2px;
+	padding: 4px;
+	margin-left: 4px;
+	margin-top: 4px;
+	font-size: 1.5rem;
+	text-decoration: none;
+	display: inline-block;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button, input {
+	background-color: var(--c_button);
+	color: var(--c_text);
+	border: none;
+}
+
+button:hover {
+	background-color: var(--c_hover);
+}
+
+input:hover {
+	background-color: var(--c_hover);
+}
+
+hr {
+	border-color: var(--c_hover);
+}

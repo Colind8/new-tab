@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="A simplistic and compact bookmark page">
+	<meta name="keywords" content="bookmarks, speed dial, bookmark, tab, new tab">
+	<meta name="author" content="Colind8">
+	<meta name="viewport" content="width=device-width">
+	<title>New Tab</title>
+	<link href="./src/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<h1>New Tab</h1>
+	<p><button title="Toggle Edit Mode" onclick="toggle_edit()">✏</button></p>
+	<fieldset class="edit">
+		<legend>Edit Tab:</legend>
+		<input id="input_tab_name" type="text" placeholder="Tab Title">
+		<input id="input_tab_name" style='width: 200px;' type="text" placeholder="password (leave blank for none)">
+		<button title="Add a bookmark tab" onclick="change_tab()">Apply</button>
+		<button title="Add website to list" onclick="delete_tab()">Delete</button>
+	</fieldset>
+	<div id="navbar"></div>
+	<fieldset class="edit">
+		<legend>Add Bookmark:</legend>
+		<input id="input_url" type="url" placeholder="https://www.URL.com">
+		<input id="input_name" type="text" placeholder="Name">
+		<input id="input_color" type="color" style="height: 20px" value="#00ff88">
+		<button title="Add website to list" onclick="add_site()">Add</button>
+	</fieldset>
+	<div id="linklist">
+		
+	</div>
+	<div class="edit">
+		<fieldset>
+			<legend>Theme Editor:</legend>
+			<label for="color_bg">Background Color:</label>
+			<input title="background color" id="color_bg" type="color" style="height: 20px" value="#000000"><br>
+
+			<label for="color_bg">Text Color:</label>
+			<input title="text color" id="color_text" type="color" style="height: 20px" value="#dddddd"><br>
+
+			<label for="color_bg">Button Color:</label>
+			<input title="buttons/inputs color" id="color_button" type="color" style="height: 20px" value="#222222"><br>
+
+			<label for="color_bg">Button Hover Color:</label>
+			<input title="buttons/inputs hover color" id="color_hover" type="color" style="height: 20px" value="#333333"><br>
+			<button title="Apply color changes" onclick="applytheme()">Apply Theme</button>
+		</fieldset>
+		<fieldset>
+			<legend>Save Editor:</legend>
+			<input title="Link list" id="link_list">
+			<button title="Import from textarea above" style="margin-top: 8px; margin-bottom: 16px;" onclick="import_data()">Import</button>
+
+			<button title="Delete LocalStorage data" style="color: red; display: block;" onclick="delete_data()">Delete Data</button>
+		</fieldset>
+	</div>
+	
+	<script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
+	<script src="./src/script.js"></script>
+</body>
+
+</html>
