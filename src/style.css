@@ -42,14 +42,32 @@ button, input {
 	border: none;
 }
 
-button:hover {
-	background-color: var(--c_hover);
-}
-
-input:hover {
+button:hover, input:hover {
 	background-color: var(--c_hover);
 }
 
 hr {
 	border-color: var(--c_hover);
+}
+
+fieldset {
+	border-color: var(--c_text);
+	margin-top: 16px;
+	margin-bottom: 16px;
+	width: fit-content;
+}
+
+#navbar button {
+	padding: 6px;
+	font-size: 1.25rem;
+	margin: 2px;
+}
+
+#linklist {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.delete {
+	color: red;
 }

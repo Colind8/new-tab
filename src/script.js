@@ -41,6 +41,7 @@ function toggle_edit() {
 			editables[i].style.display = "none";
 		}
 		edit = false;
+		current_tab = 0;
 		switch_tab(0);
 		save(0);
 	} else {
@@ -48,6 +49,7 @@ function toggle_edit() {
 			editables[i].style.display = "block";
 		}
 		edit = true;
+		current_tab = 0;
 		switch_tab(0);
 		load_editor();
 	}
@@ -136,7 +138,7 @@ function load_editor() {
 
 			linkstr += `</div>`
 			if (i2 != 0) {
-				linkstr += `<button onclick="delete_section(${i2})" style="display: block;" class="dragdisable">Delete Section</button>`
+				linkstr += `<button title="Delete section and its items" onclick="delete_section(${i2})" class="delete" style="display: block;" class="dragdisable">Delete Section</button>`
 			}
 			linkstr += `</div>`
 		}
@@ -148,7 +150,10 @@ function load_editor() {
 	document.getElementById("navbar").innerHTML = navbstr;
 
 	generate_sortables();
+
 	switch_tab(current_tab);
+
+	document.getElementById('save_data').value = data;
 
 	document.getElementById("color_bg").value = dataobj.s[0];
 	document.getElementById("color_text").value = dataobj.s[1];
@@ -290,7 +295,12 @@ function delete_section(num) {
 }
 
 function switch_tab(tabid) { // switching to a new tab
-	if (document.getElementById(`tab_button${tabid}`).getAttribute('data-pass')) {
+	console.log(`tabid != current_tab --- ${tabid != current_tab}`)
+	if (tabid == current_tab) {
+		return;
+	}
+	
+	if (document.getElementById(`tab_button${tabid}`).getAttribute('data-pass') && (tabid != current_tab)) {
 		let passwordentry = prompt("Please enter the password:", "");
 		if (passwordentry != document.getElementById(`tab_button${tabid}`).getAttribute('data-pass')) {
 			return;
@@ -337,4 +347,30 @@ function create_tab() {
 	document.getElementById("linklist").innerHTML += `<div id="tab${tabcount}"><div><div></div></div></div>`;
 	document.getElementById("navbar").innerHTML += `<button data-pass="" id="tab_button${tabcount}" onclick="switch_tab(${tabcount})">${tname}</button>`;
 	save(1);
+}
+
+function applytheme() {
+	c1 = document.getElementById("color_bg").value;
+	c2 = document.getElementById("color_text").value;
+	c3 = document.getElementById("color_button").value;
+	c4 = document.getElementById("color_hover").value;
+
+	dataobj.s[0] = c1;
+	dataobj.s[1] = c2;
+	dataobj.s[2] = c3;
+	dataobj.s[3] = c4;
+
+	save(1);
+}
+
+function delete_data() {
+	localStorage.removeItem("data");
+	document.body.innerHTML = `<h1>New Tab</h1>`
+	document.body.innerHTML += `<p>Data Deleted. Refresh to restart.</p>`
+}
+
+function import_data() {
+	data = document.getElementById('save_data').value;
+	localStorage.setItem("data", data);
+	load();
 }
