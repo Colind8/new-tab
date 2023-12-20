@@ -41,12 +41,14 @@ function toggle_edit() {
 			editables[i].style.display = "none";
 		}
 		edit = false;
+		switch_tab(0);
 		save(0);
 	} else {
 		for (i = 0; i < editables.length; i++) {
 			editables[i].style.display = "block";
 		}
 		edit = true;
+		switch_tab(0);
 		load_editor();
 	}
 }
@@ -68,7 +70,7 @@ function load() {
 	navbstr = ""; // navbar html
 	for (i = 0; i < dataobj.d.length; i++) {
 		if (dataobj.d.length > 1) { //tabs
-			navbstr += `<button onclick="switch_tab(${i})">${dataobj.d[i].title}</button>`
+			navbstr += `<button data-pass="${dataobj.d[i].password}" id="tab_button${i}" onclick="switch_tab(${i})">${dataobj.d[i].title}</button>`
 		}
 		linkstr += `<div id="tab${i}">`
 		for (i2 = 0; i2 < dataobj.d[i].data.length; i2++) {
@@ -83,7 +85,8 @@ function load() {
 		linkstr += `</div>`
 	}
 	document.getElementById("linklist").innerHTML = linkstr;
-	document.getElementById("navbar").value = navbstr;
+	document.getElementById("navbar").innerHTML = navbstr;
+	switch_tab(0);
 
 	document.getElementById("color_bg").value = dataobj.s[0];
 	document.getElementById("color_text").value = dataobj.s[1];
@@ -124,7 +127,8 @@ function load_editor() {
 			}
 			linkstr += `<div>`
 			for (i3 = 0; i3 < dataobj.d[i].data[i2].length; i3++) {
-				linkstr += `<span class="edit_link" id="link${linkcount}" data-href="${dataobj.d[i].data[i2][i3].u}" data-name="${dataobj.d[i].data[i2][i3].n}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</span>`
+				linkstr += `<span class="edit_link" id="link${linkcount}" data-href="${dataobj.d[i].data[i2][i3].u}" data-name="${dataobj.d[i].data[i2][i3].n}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">`;
+				linkstr += `<span>${dataobj.d[i].data[i2][i3].n}</span> <button onclick=delete_link('link${linkcount}')>X</button></span>`;
 				console.log(`Adding ${dataobj.d[i].data[i2][i3].n}`)
 				//linkstr += `<a id="link${linkcount}" href="${dataobj.d[i].data[i2][i3].u}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</a>`
 				linkcount++;
@@ -256,6 +260,11 @@ function add_site() {
 	document.getElementById("input_color").value = "#00ff88";
 	document.getElementById("input_name").value = "";
 	document.getElementById("input_url").value = "";
+	save(1);
+}
+
+function delete_link(siteid) {
+	document.getElementById(siteid).remove();
 }
 
 function add_section() {
@@ -325,7 +334,7 @@ function create_tab() {
 	let tabcount = document.getElementById("linklist").childElementCount;
 	let tname = `Tab ${tabcount}`;
 	document.getElementById("create_tab_button").remove();
-	document.getElementById("linklist").innerHTML += `<div id="tab${tabcount}"></div>`;
+	document.getElementById("linklist").innerHTML += `<div id="tab${tabcount}"><div><div></div></div></div>`;
 	document.getElementById("navbar").innerHTML += `<button data-pass="" id="tab_button${tabcount}" onclick="switch_tab(${tabcount})">${tname}</button>`;
 	save(1);
 }
