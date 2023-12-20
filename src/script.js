@@ -68,7 +68,7 @@ function load() {
 	navbstr = ""; // navbar html
 	for (i = 0; i < dataobj.d.length; i++) {
 		if (dataobj.d.length > 1) { //tabs
-			navbstr += `<button onclick="switch_tab('tab${i}')">${dataobj.d[i].title}</button>`
+			navbstr += `<button onclick="switch_tab(${i})">${dataobj.d[i].title}</button>`
 		}
 		linkstr += `<div id="tab${i}">`
 		for (i2 = 0; i2 < dataobj.d[i].data.length; i2++) {
@@ -114,7 +114,7 @@ function load_editor() {
 	navbstr = ""; // navbar html
 	linkcount = 0;
 	for (i = 0; i < dataobj.d.length; i++) {
-		navbstr += `<button data-pass="${dataobj.d[i].password}" id="tab_button${i}" onclick="switch_tab('tab${i}')">${dataobj.d[i].title}</button>`
+		navbstr += `<button data-pass="${dataobj.d[i].password}" id="tab_button${i}" onclick="switch_tab(${i})">${dataobj.d[i].title}</button>`
 
 		linkstr += `<div id="tab${i}">`
 		for (i2 = 0; i2 < dataobj.d[i].data.length; i2++) {
@@ -139,11 +139,12 @@ function load_editor() {
 
 		linkstr += `</div>`
 	}
-	navbstr += `<button onclick="create_tab()">+</button>`
+	navbstr += `<button id="create_tab_button" onclick="create_tab()">+</button>`
 	document.getElementById("linklist").innerHTML = linkstr;
 	document.getElementById("navbar").innerHTML = navbstr;
 
 	generate_sortables();
+	switch_tab(current_tab);
 
 	document.getElementById("color_bg").value = dataobj.s[0];
 	document.getElementById("color_text").value = dataobj.s[1];
@@ -276,5 +277,55 @@ function add_section() {
 function delete_section(num) {
 	console.log("Deleting section");
 	document.getElementById(`tab${current_tab}`).childNodes[num].remove();
+	save(1);
+}
+
+function switch_tab(tabid) { // switching to a new tab
+	if (document.getElementById(`tab_button${tabid}`).getAttribute('data-pass')) {
+		let passwordentry = prompt("Please enter the password:", "");
+		if (passwordentry != document.getElementById(`tab_button${tabid}`).getAttribute('data-pass')) {
+			return;
+		}
+	}
+	current_tab = tabid;
+	document.getElementById(`input_tab_name`).value = document.getElementById(`tab_button${tabid}`).innerHTML;
+	document.getElementById(`input_tab_pass`).value = document.getElementById(`tab_button${tabid}`).getAttribute('data-pass');
+	
+	if (current_tab == 0) {
+		document.getElementById(`input_tab_pass`).readOnly = true;
+		document.getElementById(`input_tab_pass`).title = "The first tab cannot have a password";
+	} else {
+		document.getElementById(`input_tab_pass`).readOnly = false;
+		document.getElementById(`input_tab_pass`).title = "Tab Password";
+	}
+	let tabcount = document.getElementById("linklist").childElementCount;
+	for (i = 0; i < tabcount; i++) {
+		document.getElementById("linklist").childNodes[i].style.display = "none";
+	}
+	document.getElementById(`tab${tabid}`).style.display = "block";
+}
+
+function change_tab() { // changing a tab's settings
+	document.getElementById(`tab_button${current_tab}`).innerHTML = document.getElementById(`input_tab_name`).value;
+	document.getElementById(`tab_button${current_tab}`).setAttribute('data-pass', document.getElementById(`input_tab_pass`).value)
+	save(1);
+}
+
+function delete_tab() { 
+	let tabcount = document.getElementById("linklist").childElementCount;
+	if (tabcount == 1) {
+		return;
+	}
+	document.getElementById(`tab${current_tab}`).remove();
+	document.getElementById(`tab_button${current_tab}`).remove();
+	switch_tab(0);
+}
+
+function create_tab() {
+	let tabcount = document.getElementById("linklist").childElementCount;
+	let tname = `Tab ${tabcount}`;
+	document.getElementById("create_tab_button").remove();
+	document.getElementById("linklist").innerHTML += `<div id="tab${tabcount}"></div>`;
+	document.getElementById("navbar").innerHTML += `<button data-pass="" id="tab_button${tabcount}" onclick="switch_tab(${tabcount})">${tname}</button>`;
 	save(1);
 }
