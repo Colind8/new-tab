@@ -295,10 +295,13 @@ function delete_section(num) {
 }
 
 function switch_tab(tabid) { // switching to a new tab
-	console.log(`tabid != current_tab --- ${tabid != current_tab}`)
+	console.log(`tabid = ${tabid} --- current_tab = ${current_tab}`)
+	console.log(`tabid == current_tab --- ${tabid == current_tab}`)
+	// I forgot what this code segment was for but it was causing a bug.
+	/*
 	if (tabid == current_tab) {
 		return;
-	}
+	}*/
 	
 	if (document.getElementById(`tab_button${tabid}`).getAttribute('data-pass') && (tabid != current_tab)) {
 		let passwordentry = prompt("Please enter the password:", "");
