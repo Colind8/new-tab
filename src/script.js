@@ -2,6 +2,7 @@ data = localStorage.getItem("data");
 edit = false;
 current_tab = 0;
 const theme = document.querySelector(':root').style;
+const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
 //data = `data = {"d": [{"n": "Twitter", "u": "https://www.twitter.com"}]}`
 
 console.log(data);
@@ -134,7 +135,8 @@ function load_editor() {
 			linkstr += `<div>`
 			for (i3 = 0; i3 < dataobj.d[i].data[i2].length; i3++) {
 				linkstr += `<span class="edit_link" id="link${linkcount}" data-href="${dataobj.d[i].data[i2][i3].u}" data-name="${dataobj.d[i].data[i2][i3].n}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">`;
-				linkstr += `<span>${dataobj.d[i].data[i2][i3].n}</span> <button onclick=delete_link('link${linkcount}')>X</button></span>`;
+				linkstr += `<span>${dataobj.d[i].data[i2][i3].n}</span> <button onclick=delete_link('link${linkcount}')>X</button> `;
+				linkstr += `<button onclick=copy_link('link${linkcount}')>^</button></span>`;
 				console.log(`Adding ${dataobj.d[i].data[i2][i3].n}`)
 				//linkstr += `<a id="link${linkcount}" href="${dataobj.d[i].data[i2][i3].u}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</a>`
 				linkcount++;
@@ -274,6 +276,12 @@ function add_site() {
 
 function delete_link(siteid) {
 	document.getElementById(siteid).remove();
+}
+
+function copy_link(siteid) {
+	document.getElementById("input_name").value = document.getElementById(siteid).getAttribute('data-name');
+	document.getElementById("input_url").value = document.getElementById(siteid).getAttribute('data-href');
+	document.getElementById("input_color").value = rgba2hex(document.getElementById(siteid).style.color);
 }
 
 function add_section() {
