@@ -71,8 +71,11 @@ function load() {
 	linkstr = ""; // linklist html
 	navbstr = ""; // navbar html
 	for (i = 0; i < dataobj.d.length; i++) {
-		if (dataobj.d.length > 1) { //tabs
-			navbstr += `<button data-pass="${dataobj.d[i].password}" id="tab_button${i}" onclick="switch_tab(${i})">${dataobj.d[i].title}</button>`
+		navbstr += `<button data-pass="${dataobj.d[i].password}" id="tab_button${i}" onclick="switch_tab(${i})">${dataobj.d[i].title}</button>`
+		if (dataobj.d.length <= 1) { //tabs
+			document.getElementById("navbar").style.display = "none";
+		} else {
+			document.getElementById("navbar").style.display = "block";
 		}
 		linkstr += `<div id="tab${i}">`
 		for (i2 = 0; i2 < dataobj.d[i].data.length; i2++) {
@@ -104,6 +107,7 @@ function load() {
 function load_editor() {
 	document.getElementById('linklist').innerHTML = "";
 	document.getElementById('navbar').innerHTML = "";
+	document.getElementById("navbar").style.display = "block";
 
 	data = localStorage.getItem("data");
 	console.log("-- 7 --");
