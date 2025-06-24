@@ -171,8 +171,8 @@ function load_editor() {
 			linkstr += `<div>`
 			for (i3 = 0; i3 < dataobj.d[i].data[i2].length; i3++) {
 				linkstr += `<span class="edit_link" id="link${linkcount}" data-href="${dataobj.d[i].data[i2][i3].u}" data-name="${dataobj.d[i].data[i2][i3].n}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">`;
-				linkstr += `<span>${dataobj.d[i].data[i2][i3].n}</span> <button onclick=delete_link('link${linkcount}')>X</button> `;
-				linkstr += `<button onclick=copy_link('link${linkcount}')>^</button></span>`;
+				linkstr += `<span>${dataobj.d[i].data[i2][i3].n}</span> <span class="editor_link_buttons"><button onclick=delete_link('link${linkcount}')>X</button> `;
+				linkstr += `<button onclick=copy_link('link${linkcount}')>^</button></span></span>`;
 				console.log(`Adding ${dataobj.d[i].data[i2][i3].n}`)
 				//linkstr += `<a id="link${linkcount}" href="${dataobj.d[i].data[i2][i3].u}" style="color: ${dataobj.d[i].data[i2][i3].c}; border-color: ${dataobj.d[i].data[i2][i3].c};">${dataobj.d[i].data[i2][i3].n}</a>`
 				linkcount++;

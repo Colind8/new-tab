@@ -71,3 +71,11 @@ fieldset {
 .delete {
 	color: red;
 }
+
+.editor_link_buttons {
+	display: none;
+}
+
+.edit_link:hover .editor_link_buttons {
+	display: inline;
+}
