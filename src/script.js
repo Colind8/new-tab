@@ -275,10 +275,12 @@ function save(loadnum) {
 		document.getElementById("color_button").value,
 		document.getElementById("color_hover").value
 	];
+	
+	dataobj = newobj;
 
 	console.log("-- 3 --");
-	console.log(newobj);
-	data = JSON.stringify(newobj);
+	console.log(dataobj);
+	data = JSON.stringify(dataobj);
 	console.log("-- 4 --");
 	console.log(data);
 	data = window.btoa(data);
