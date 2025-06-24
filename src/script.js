@@ -9,20 +9,25 @@ console.log(data);
 
 
 if (data) {
-	load();
+	update_data();
 } else {
-	dataobj = JSON.parse(`{
-		"d": [
+	dataobj = {
+		d: [
 			{
-				"title": "default",
-				"password": "",
-				"data": [
+				title: "default",
+				password: "",
+				data: [
 					[]
 				]
 			}
 		],
-		"s": ["#000000","#dddddd","#222222","#333333"]
-	}`);
+		s: ["#000000","#dddddd","#222222","#333333"],
+		i: {
+			ver: 0,
+			picker: true
+		}
+	};
+	
 	console.log("-- 3 --");
 	console.log(dataobj);
 	data = JSON.stringify(dataobj);
@@ -35,30 +40,7 @@ if (data) {
 	load();
 }
 
-function toggle_edit() {
-	let editables = document.getElementsByClassName(`edit`);
-	if (edit) {
-		for (i = 0; i < editables.length; i++) {
-			editables[i].style.display = "none";
-		}
-		edit = false;
-		current_tab = 0;
-		switch_tab(0);
-		save(0);
-	} else {
-		for (i = 0; i < editables.length; i++) {
-			editables[i].style.display = "block";
-		}
-		edit = true;
-		current_tab = 0;
-		switch_tab(0);
-		load_editor();
-	}
-}
-
-function load() {
-	document.getElementById('linklist').innerHTML = "";
-	document.getElementById('navbar').innerHTML = "";
+function update_data() {
 	data = localStorage.getItem("data");
 	console.log("-- 7 --");
 	console.log(data);
@@ -69,6 +51,39 @@ function load() {
 	console.log(dataobj);
 	dataobj = JSON.parse(dataobj);
 
+	console.log("checking for data updates...");
+	if (dataobj.i === undefined) {
+		console.log("Updating to version 0");
+		let new_dataobj = {
+			d: dataobj.d,
+			s: dataobj.s,
+			i: {
+				ver: 0,
+				picker: true
+			}
+		};
+		
+		dataobj = new_dataobj;
+	}
+	
+	console.log("Update check complete.");
+	console.log("-- 3 --");
+	console.log(dataobj);
+	data = JSON.stringify(dataobj);
+	console.log("-- 4 --");
+	console.log(data);
+	data = window.btoa(data);
+	console.log("-- 5 --");
+	console.log(data);
+	localStorage.setItem("data", data);
+	
+	load();
+}
+
+function load() {
+	document.getElementById('linklist').innerHTML = "";
+	document.getElementById('navbar').innerHTML = "";
+	
 	linkstr = ""; // linklist html
 	navbstr = ""; // navbar html
 	for (i = 0; i < dataobj.d.length; i++) {
@@ -103,6 +118,27 @@ function load() {
 	theme.setProperty('--c_text', dataobj.s[1]);
 	theme.setProperty('--c_button', dataobj.s[2]);
 	theme.setProperty('--c_hover', dataobj.s[3]);
+}
+
+function toggle_edit() {
+	let editables = document.getElementsByClassName(`edit`);
+	if (edit) {
+		for (i = 0; i < editables.length; i++) {
+			editables[i].style.display = "none";
+		}
+		edit = false;
+		current_tab = 0;
+		switch_tab(0);
+		save(0);
+	} else {
+		for (i = 0; i < editables.length; i++) {
+			editables[i].style.display = "block";
+		}
+		edit = true;
+		current_tab = 0;
+		switch_tab(0);
+		load_editor();
+	}
 }
 
 function load_editor() {
@@ -165,6 +201,21 @@ function load_editor() {
 	document.getElementById("color_text").value = dataobj.s[1];
 	document.getElementById("color_button").value = dataobj.s[2];
 	document.getElementById("color_hover").value = dataobj.s[3];
+	
+	let color_pickers = ["input_color","color_bg","color_text","color_button","color_hover"];
+	if (dataobj.i.picker) {
+		document.getElementById("color_picker_toggle").checked = true;
+		for (let i = 0; i < color_pickers.length; i++) {
+			document.getElementById(color_pickers[i]).type = "text";
+			document.getElementById(color_pickers[i]).style = "";
+		}
+	} else {
+		document.getElementById("color_picker_toggle").checked = false;
+		for (let i = 0; i < color_pickers.length; i++) {
+			document.getElementById(color_pickers[i]).type = "color";
+			document.getElementById(color_pickers[i]).style = "height: 20px";
+		}
+	}
 
 	theme.setProperty('--c_bg', dataobj.s[0]);
 	theme.setProperty('--c_text', dataobj.s[1]);
@@ -177,7 +228,11 @@ function save(loadnum) {
 	let newobj = {
 		d: [
 		],
-		s: ["#000000", "#dddddd", "#222222", "#333333"]
+		s: ["#000000", "#dddddd", "#222222", "#333333"],
+		i: {
+			ver: dataobj.i.ver,
+			picker: dataobj.i.picker
+		}
 	}
 
 	for (i = 0; i < tab_count; i++) { // for every tab
@@ -378,6 +433,16 @@ function applytheme() {
 	save(1);
 }
 
+function applysettings() {
+	if (document.getElementById("color_picker_toggle").checked) {
+		dataobj.i.picker = true;
+	} else {
+		dataobj.i.picker = false;
+	}
+
+	save(1);
+}
+
 function delete_data() {
 	localStorage.removeItem("data");
 	document.body.innerHTML = `<h1>New Tab</h1>`
@@ -387,5 +452,6 @@ function delete_data() {
 function import_data() {
 	data = document.getElementById('save_data').value;
 	localStorage.setItem("data", data);
-	load();
+	toggle_edit();
+	update_data();
 }

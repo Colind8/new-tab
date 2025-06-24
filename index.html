@@ -38,18 +38,23 @@
 		<fieldset>
 			<legend>Theme Editor:</legend>
 			<label for="color_bg">Background Color:</label>
-			<input title="background color" id="color_bg" type="color" style="height: 20px" value="#000000"><br>
+			<input title="background color" id="color_bg" type="color" style="height: 20px" value="#000000"><br><br>
 
 			<label for="color_text">Text Color:</label>
-			<input title="text color" id="color_text" type="color" style="height: 20px" value="#dddddd"><br>
+			<input title="text color" id="color_text" type="color" style="height: 20px" value="#dddddd"><br><br>
 
 			<label for="color_button">Button Color:</label>
-			<input title="buttons/inputs color" id="color_button" type="color" style="height: 20px" value="#222222"><br>
+			<input title="buttons/inputs color" id="color_button" type="color" style="height: 20px" value="#222222"><br><br>
 
 			<label for="color_hover">Button Hover Color:</label>
-			<input title="buttons/inputs hover color" id="color_hover" type="color" style="height: 20px"
-				value="#333333"><br>
+			<input title="buttons/inputs hover color" id="color_hover" type="color" style="height: 20px" value="#333333"><br><br>
 			<button title="Apply color changes" onclick="applytheme()">Apply Theme</button>
+		</fieldset>
+		<fieldset>
+			<legend>Editor Settings:</legend>
+			<label for="color_picker_toggle">Hex input for colors:</label>
+			<input title="Toggle whether to use a color picker input or text input for choosing colors." id="color_picker_toggle" type="checkbox"><br>
+			<button title="Apply" onclick="applysettings()">Apply</button>
 		</fieldset>
 		<fieldset>
 			<legend>Save Editor:</legend>
