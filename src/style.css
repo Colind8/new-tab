@@ -9,8 +9,10 @@ body {
 	background-color: var(--c_bg);
 	color: var(--c_text);
 	font-family: sans-serif;
-	padding-left: 10vw;
-	padding-right: 10vw;
+	padding-left: 10px;
+	padding-right: 10px;
+	max-width: 1500px;
+	margin: auto;
 	text-align: left;
 }
 
