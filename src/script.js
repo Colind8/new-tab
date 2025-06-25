@@ -77,7 +77,12 @@ function update_data() {
 	console.log(data);
 	localStorage.setItem("data", data);
 	
-	load();
+	if (edit) {
+		load_editor();
+	} else {
+		load();
+	}
+	
 }
 
 function load() {
@@ -452,8 +457,8 @@ function delete_data() {
 }
 
 function import_data() {
+	console.log('Importing data...');
 	data = document.getElementById('save_data').value;
 	localStorage.setItem("data", data);
-	toggle_edit();
 	update_data();
 }
