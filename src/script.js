@@ -451,12 +451,20 @@ function applysettings() {
 }
 
 function delete_data() {
+	let passwordentry = prompt("Are you sure you want to delete all data? This cannot be undone. Type 'delete' to confirm", "");
+	if (passwordentry != "delete") {
+		return;
+	}
 	localStorage.removeItem("data");
 	document.body.innerHTML = `<h1>New Tab</h1>`
 	document.body.innerHTML += `<p>Data Deleted. Refresh to restart.</p>`
 }
 
 function import_data() {
+	let passwordentry = prompt("Are you sure you want to import and replace your data? This cannot be undone. Type 'import' to confirm", "");
+	if (passwordentry != "import") {
+		return;
+	}
 	console.log('Importing data...');
 	data = document.getElementById('save_data').value;
 	localStorage.setItem("data", data);
