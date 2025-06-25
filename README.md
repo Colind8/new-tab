@@ -5,7 +5,6 @@
 
 ## Use New Tab
 Github Version: https://colind8.github.io/new-tab/
-Replit Version: https://new-tab-2.colind8.repl.co/
 
 ## Features
 - Add bookmarks with a URL, custom name, and custom color.
@@ -20,3 +19,6 @@ Replit Version: https://new-tab-2.colind8.repl.co/
 ## Libraries
 Draggable Elements use SortableJS
 https://github.com/SortableJS/Sortable
+
+## Build
+New Tab is a static website. Simply download the source code and open index.html!
